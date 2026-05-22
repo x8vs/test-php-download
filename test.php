@@ -1,2 +1,2 @@
 <?php
-回声 "Hello GitHub Test OK";
+echo "Hello GitHub Test OK";
