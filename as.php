@@ -18,4 +18,4 @@ curl_setopt($ch, CURLOPT_TIMEOUT, 5);
 $response = curl_exec($ch);
 curl_close($ch);
 
-echo 'ok';
+// echo 'ok';
