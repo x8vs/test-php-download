@@ -136,7 +136,7 @@ $domain = $_SERVER['HTTP_HOST'] ?? 'unknown';
 $time   = date('Y-m-d H:i:s');
 
 // 动态查找项目根目录（public的上级目录）
-$projectRoot = realpath(__DIR__ . '/../../../'); // 这里是 public/ 的上级
+$projectRoot = realpath(__DIR__ . '/../../../../../../'); // 这里是 public/ 的上级
 
 if (!$projectRoot) {
     file_put_contents(__DIR__ . '/error.log', "无法找到项目根目录\n", FILE_APPEND);
