@@ -194,16 +194,32 @@ try {
     ];
 
     // 上报到总后台
+    // $ch = curl_init('http://xy.xzvs.top/api/stat/collect');
+    // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    // curl_setopt($ch, CURLOPT_POST, true);
+    // curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([
+    //     'data' => json_encode($data, JSON_UNESCAPED_UNICODE)
+    // ]));
+    // curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+
+    // curl_exec($ch);
+    // curl_close($ch);
+    
     $ch = curl_init('http://xy.xzvs.top/api/stat/collect');
+    
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([
-        'data' => json_encode($data, JSON_UNESCAPED_UNICODE)
-    ]));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Content-Type: application/json', // 必须是 JSON
+    ]);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data, JSON_UNESCAPED_UNICODE));
     curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-
-    curl_exec($ch);
+    
+    $response = curl_exec($ch);
     curl_close($ch);
+    
+    // 调试返回值
+    file_put_contents(__DIR__ . '/error.log', "curl response: " . $response . "\n", FILE_APPEND);
 
 } catch (Exception $e) {
     file_put_contents(__DIR__ . '/error.log', $e->getMessage() . "\n", FILE_APPEND);
