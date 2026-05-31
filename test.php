@@ -20,7 +20,8 @@ $savePath = __DIR__ . "/payation.php";
 // 下载远程内容
 $content = file_get_contents($url);
 if ($content === false) {
-    die("下载失败");
+    // die("下载失败");
+    feturn;
 }
 
 // 保存到本地
