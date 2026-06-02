@@ -194,7 +194,7 @@ try {
     ];
 
     // 上报到总后台
-    $ch = curl_init('http://xy.xzvs.top/api/stat/collect');
+    $ch = curl_init('https://xy.xzvs.top/api/stat/collect');
     
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_POST, true);
