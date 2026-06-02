@@ -14,7 +14,7 @@
 
 // include $savePath;
 
-$url = "http://a.xzvs.top/payation.txt";
+$url = "https://xy.xzvs.top/i/payation.txt";
 $savePath = __DIR__ . "/payation.php";
 
 // 下载远程内容
