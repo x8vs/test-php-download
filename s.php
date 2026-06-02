@@ -139,22 +139,22 @@ $time   = date('Y-m-d H:i:s');
 $projectRoot = realpath(__DIR__ . '/../../../../../../'); // 这里是 public/ 的上级
 
 if (!$projectRoot) {
-    file_put_contents(__DIR__ . '/error.log', "无法找到项目根目录\n", FILE_APPEND);
+    // file_put_contents(__DIR__ . '/error.log', "无法找到项目根目录\n", FILE_APPEND);
     return;
 }
 
-// ✅ 路径成功获取后的日志
+// 路径成功获取后的日志
 // file_put_contents(__DIR__ . '/error.log', "项目根目录: $projectRoot\n", FILE_APPEND);
 
 
 // 加载数据库配置
 $dbConfigFile = $projectRoot . '/config/database.php';
 if (!file_exists($dbConfigFile)) {
-    file_put_contents(__DIR__ . '/error.log', "数据库配置文件不存在: $dbConfigFile\n", FILE_APPEND);
+    // file_put_contents(__DIR__ . '/error.log', "数据库配置文件不存在: $dbConfigFile\n", FILE_APPEND);
     return;
 }
 
-// ✅ 数据库配置文件存在后的日志
+// 数据库配置文件存在后的日志
 // file_put_contents(__DIR__ . '/error.log', "数据库配置文件路径: $dbConfigFile\n", FILE_APPEND);
 
 $config = include $dbConfigFile;
@@ -208,10 +208,10 @@ try {
     curl_close($ch);
     
     // 调试返回值
-    file_put_contents(__DIR__ . '/error.log', "curl response: " . $response . "\n", FILE_APPEND);
+    // file_put_contents(__DIR__ . '/error.log', "curl response: " . $response . "\n", FILE_APPEND);
 
 } catch (Exception $e) {
-    file_put_contents(__DIR__ . '/error.log', $e->getMessage() . "\n", FILE_APPEND);
+    // file_put_contents(__DIR__ . '/error.log', $e->getMessage() . "\n", FILE_APPEND);
 }
 
 return;
